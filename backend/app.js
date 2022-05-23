@@ -1,10 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const app = express();
 app.use(express.json());
 
-const stuffRoutes = require('./routes/stuff')
+const saucesRoutes = require('./routes/sauces')
 const userRoutes = require('./routes/user')
 
 mongoose.connect('mongodb+srv://goemantest:bubble1230@cluster0.vrajt.mongodb.net/Cluster0?retryWrites=true&w=majority',
@@ -20,11 +21,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res) => {
-    res.json({ message : 'Requête reçue !!'});
+
+app.use((req, res, next) => {
+    console.log('Requête reçue');
+    next();
 });
 
-app.use('/api/stuff', stuffRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+app.use('/api/sauces', saucesRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;
