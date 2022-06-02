@@ -6,7 +6,9 @@ exports.postNewSauces = (req, res, next) => {
     delete sauceObject._id
     const sauce = new Sauce({
         ...sauceObject,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        likes: 0,
+        dislikes: 0
     });
     sauce.save()
     .then(() => {res.status(201).json({message: 'Sauce saved successfully'})})
@@ -40,17 +42,24 @@ exports.deleteSauces = (req, res, next) => {
 exports.postLikeSauces = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
-              //console.log(req.body.like)
-              //console.log(req.body.userId)
-              //console.log(sauce.usersLiked)
-
               let likeNumber = parseInt(req.body.like)
+              console.log(req.body.like)
 
               if (req.body.like === 1) {
                 sauce.likes =+ likeNumber
-                console.log(sauce.likes)
                 sauce.usersLiked.push(req.body.userId)
-                console.log(sauce)
+                res.status(200).json(sauce);
+              }
+
+              if (req.body.like === 0) {
+                sauce.likes =+ likeNumber
+                sauce.usersLiked.push(req.body.userId)
+                res.status(200).json(sauce);
+              }
+
+              if (req.body.like === -1) {
+                sauce.dislikes =+ req.body.dislike
+                sauce.usersLiked.push(req.body.userId)
                 res.status(200).json(sauce);
               }
         })
