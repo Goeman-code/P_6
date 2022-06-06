@@ -47,19 +47,29 @@ exports.postLikeSauces = (req, res, next) => {
 
               if (req.body.like === 1) {
                 sauce.likes =+ likeNumber
-                sauce.usersLiked.push(req.body.userId)
+                sauce.usersLiked.push(req.body.userId);
                 res.status(200).json(sauce);
               }
 
               if (req.body.like === 0) {
                 sauce.likes =+ likeNumber
-                sauce.usersLiked.push(req.body.userId)
+
+                const indexLiked = sauce.usersLiked.findIndex(userId => userId === req.body.userId)
+                if (indexLiked !== -1) {
+                    delete sauce.usersLiked[indexLiked];
+                }
+
+                const indexDisliked = sauce.usersDisliked.findIndex(userId => userId === req.body.userId)
+                if (indexDisliked !== -1) {
+                    delete sauce.usersDisliked[indexDisliked];
+                }
+                
                 res.status(200).json(sauce);
               }
 
               if (req.body.like === -1) {
                 sauce.dislikes =+ req.body.dislike
-                sauce.usersLiked.push(req.body.userId)
+                sauce.usersDisliked.push(req.body.userId)
                 res.status(200).json(sauce);
               }
         })
