@@ -43,16 +43,18 @@ exports.postLikeSauces = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
               let likeNumber = parseInt(req.body.like)
-              console.log(req.body.like)
+              let dislikeNumber = parseInt(req.body.dislike)
 
               if (req.body.like === 1) {
                 sauce.likes =+ likeNumber
                 sauce.usersLiked.push(req.body.userId);
-                res.status(200).json(sauce);
+                
+                sauce.save().then(() => res.status(200).json())
               }
 
               if (req.body.like === 0) {
-                sauce.likes =+ likeNumber
+                sauce.likes - 1
+                console.log('aled')
 
                 const indexLiked = sauce.usersLiked.findIndex(userId => userId === req.body.userId)
                 if (indexLiked !== -1) {
@@ -63,14 +65,17 @@ exports.postLikeSauces = (req, res, next) => {
                 if (indexDisliked !== -1) {
                     delete sauce.usersDisliked[indexDisliked];
                 }
-                
-                res.status(200).json(sauce);
+
+                sauce.save().then(() => res.status(200).json(sauce))
+                //res.status(200).json(sauce)
               }
 
               if (req.body.like === -1) {
-                sauce.dislikes =+ req.body.dislike
+                sauce.dislikes =+ dislikeNumber
                 sauce.usersDisliked.push(req.body.userId)
-                res.status(200).json(sauce);
+
+                //sauce.save().then(() => res.status(200).json(sauce))
+                res.status(200).json(sauce)
               }
         })
         .catch(error => res.status(400).json({ error }))
