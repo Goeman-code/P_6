@@ -47,6 +47,7 @@ exports.postLikeSauces = (req, res, next) => {
 
               if (req.body.like === 1) {
                 sauce.likes =+ likeNumber
+                console.log(sauce.likes)
                 sauce.usersLiked.push(req.body.userId);
                 
                 sauce.save().then(() => res.status(200).json())
@@ -54,7 +55,6 @@ exports.postLikeSauces = (req, res, next) => {
 
               if (req.body.like === 0) {
                 sauce.likes - 1
-                console.log('aled')
 
                 const indexLiked = sauce.usersLiked.findIndex(userId => userId === req.body.userId)
                 if (indexLiked !== -1) {
@@ -66,6 +66,7 @@ exports.postLikeSauces = (req, res, next) => {
                     delete sauce.usersDisliked[indexDisliked];
                 }
 
+                console.log(sauce.likes)
                 sauce.save().then(() => res.status(200).json(sauce))
                 //res.status(200).json(sauce)
               }
@@ -73,6 +74,7 @@ exports.postLikeSauces = (req, res, next) => {
               if (req.body.like === -1) {
                 sauce.dislikes =+ dislikeNumber
                 sauce.usersDisliked.push(req.body.userId)
+                console.log(sauce.likes)
 
                 //sauce.save().then(() => res.status(200).json(sauce))
                 res.status(200).json(sauce)
