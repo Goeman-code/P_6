@@ -43,11 +43,9 @@ exports.postLikeSauces = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
               let likeNumber = parseInt(req.body.like)
-              let dislikeNumber = parseInt(req.body.dislike)
 
               if (req.body.like === 1) {
                 sauce.likes =+ likeNumber
-                console.log(sauce.likes)
                 sauce.usersLiked.push(req.body.userId);
                 
                 sauce.save().then(() => res.status(200).json())
@@ -67,17 +65,17 @@ exports.postLikeSauces = (req, res, next) => {
                 }
 
                 console.log(sauce.likes)
-                sauce.save().then(() => res.status(200).json(sauce))
+                sauce.save().then(() => res.status(200).json())
                 //res.status(200).json(sauce)
               }
 
               if (req.body.like === -1) {
-                sauce.dislikes =+ dislikeNumber
+                //sauce.dislikes =+ likeNumber
                 sauce.usersDisliked.push(req.body.userId)
-                console.log(sauce.likes)
+                console.log(sauce.dislikes)
 
                 //sauce.save().then(() => res.status(200).json(sauce))
-                res.status(200).json(sauce)
+                res.status(200).json()
               }
         })
         .catch(error => res.status(400).json({ error }))
