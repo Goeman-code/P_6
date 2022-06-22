@@ -27,7 +27,3 @@ app.use('/api/sauces', saucesRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;
-
-//Variables env : fait
-//Vérification email : fait
-//Vérification userID : 
