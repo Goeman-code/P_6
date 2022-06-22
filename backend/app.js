@@ -8,7 +8,7 @@ app.use(express.json());
 const saucesRoutes = require('./routes/sauces')
 const userRoutes = require('./routes/user')
 
-mongoose.connect('mongodb+srv://goemantest:bubble1230@cluster0.vrajt.mongodb.net/Cluster0?retryWrites=true&w=majority',
+mongoose.connect(process.env.MONGODB,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -19,13 +19,7 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
-});
-
-
-app.use((req, res, next) => {
-    //console.log('Requête reçue');
-    next();
-});
+});   
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
@@ -33,3 +27,7 @@ app.use('/api/sauces', saucesRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;
+
+//Variables env : fait
+//Vérification email : fait
+//Vérification userID : 

@@ -1,11 +1,14 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+require('dotenv').config();
 
 exports.signup = (req, res, next) => {
-  console.log('lancement de la requête signup')
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
+      let filtreMail = /^([a-zA-Z\d\.-]+)@([a-zA-Z\d-]+)\.([a-zA-Z]{2,8})$/
+      console.log(filtreMail.test(req.body.email))
+      if (filtreMail.test(req.body.email) === true) {
         const user = new User({
             email: req.body.email,
             password: hash
@@ -13,11 +16,12 @@ exports.signup = (req, res, next) => {
         user.save()
         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
         .catch(error => res.status(400).json({ error }));
+      }
     })
     .catch(error => res.status(500).json({ error }));
 }
 
-exports.login = (req, res, next) => {
+exports.login = (req, res, next) => { 
   console.log('lancement de la requête login')
     User.findOne({ email: req.body.email })
     .then(user => {
@@ -33,7 +37,7 @@ exports.login = (req, res, next) => {
             userId: user._id,
             token: jwt.sign(
                 { userId: user._id },
-                'RANDOM_TOKEN_SECRET',
+                process.env.TOKEN,
                 { expiresIn: '24h' }
               )
           });
